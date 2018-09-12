@@ -2,7 +2,7 @@
 The guide provides instructions on how to setup TeamCity 2018.1 server running on Windows 2016 server and configure build jobs for a VueJS application (with TypeScript) and a .NET Core 2 Web API.
 
 Requirements: 
-- Windows Server 2016 (lower versions will probably work as well)
+- Windows Server 2016 (lower versions will probably work as well). Suggested configuration: 2 vcpus, 4GB RAM
 - TeamCity 2018.1
 - Full admin access to the server (including an ability to create new local-admin users)
 
@@ -13,15 +13,51 @@ The system user may not be able to run these commands (at least I wasn't able to
 
 If you're creating a new user, make sure the user is a) Local Admin and b) Allowed RDC connections (you'll connect to the server as that user to install various tools (e.g. npm, npm packages, git)
 
+Using the Windows Server User Control panel, you can make the user an admin by changing the profile's user type, e.g. :
+![Local User Type](https://raw.githubusercontent.com/glebpopoff/TeamCity-2018.1-Setup-Guide/master/local-user-type.png)
+
 ## Install Chrome, NotePad++
 If it's a fresh server environment (e.g. Windows Server 2016), go ahead and install Chrome and NotePad++ to make your life easier troubleshooting things.
 
 Chrome: https://www.google.com/chrome/browser/desktop/index.html
 NotePad++: https://notepad-plus-plus.org/download/v7.5.8.html
 
+If you using the server, make Chrome your default browser so that you don't have to deal with IE 11 nonsense. 
+
 ## Download TeamCity 2018.1
 Download the installer from this URL: https://www.jetbrains.com/teamcity/download
 
 The installer for the current version (2018.1) is quite large ~ about 1GB in size.
+
+## Download MySQL Community Edition 8.X
+TeamCity will need a database engine to persist its data and configuration. Skip this step if you have access to a RDBMS (MySQL, SQL Server, Postgres) - double check what's supported.
+
+I'm going to use MySQL Community Server 8.0.12 for the setup. Download link: https://dev.mysql.com/downloads/windows/installer/8.0.html Make sure to choose the Installer Option (vs ZIP Archive). You can skip the login (the link is at the bottom) and just proceed to the Download screen. The file should be about 273MB.
+
+## Start TeamCity Installation
+Run the installer. Choose the "windows service" option for both agent and server selections along with the default port and other options. 
+
+When prompted to save user configuration, go ahead and click the "Save" button - you should see a confirmation
+![Save Agent Configuration]https://raw.githubusercontent.com/glebpopoff/TeamCity-2018.1-Setup-Guide/master/save-agent-props.png
+
+When the installer prompts you to select Service Account for the server select SYSTEM account for time being (we can switch later to the user created above). For some reason the installer didn't recognize the newly created user from the above step.
+
+Once the installer finishes, the browser should open the following page: http://localhost/mnt to start the configuration wizard:
+![Web Configuration Screen]https://raw.githubusercontent.com/glebpopoff/TeamCity-2018.1-Setup-Guide/master/teamcity-web-configuration.png
+
+If for some reason the installer fails or the page doesn't open, try re-installing teamcity from the beginning. If you can't get to the TeamCity First Start page (http://localhost/mnt), something went wrong.
+
+
+
+
+
+
+
+Run the installer.
+
+
+
+Do not run the installer yet. We need to download and install MySQL database 
+
 
 Disable Windows Defender / scanner - 
