@@ -6,12 +6,18 @@ Requirements:
 - TeamCity 2018.1
 - Full admin access to the server (including an ability to create new local-admin users)
 
+We're trying to accomplish the following:
+- DotNet core project build & publish (e.g. dotnet publish)
+- TypeScript build (e.g tsc)
+- VueJS distribution build (e.g. npm run build)
+- Git-based deployment (e.g. git remote add & git push <remote>)
+
 ## Create a New Local Admin User
-It's probably best for the TeamCity process to run as a separate user vs a system user. The reason for that has to do with TeamCity process running various build commands, such as ```npm``` or ```git``` that will be required during the build phase.
+It's probably best for TeamCity to run as a separate user vs a system user. The reason for that has to do with TeamCity process running various build commands, such as ```npm``` or ```git``` that will be required during the build phase.
 
 The system user may not be able to run these commands (at least I wasn't able to get it to work). Skip this step if you're feeling adventurous and would like to tackle this on your own. 
 
-If you're creating a new user, make sure the user is a) Local Admin and b) Allowed RDC connections (you'll connect to the server as that user to install various tools (e.g. npm, npm packages, git)
+If you're creating a new user, make sure the user is a) Local Admin and b) Allowed RDC connections (you'll connect to the server as that user to install various tools (e.g. npm, npm packages, git). Lets assume you created a local admin user (teamcity) with admin rights.
 
 Using the Windows Server User Control panel, you can make the user an admin by changing the profile's user type, e.g. :
 ![Local User Type](https://raw.githubusercontent.com/glebpopoff/TeamCity-2018.1-Setup-Guide/master/local-user-type.png)
@@ -103,15 +109,59 @@ Before we proceed with the project and build setup, lets go ahead and setup emai
 
 Go to the Email Notifier page: http://localhost/admin/admin.html?item=email and enter the SMTP server information. If you're using SendGrid (which is awesome), your settings should be as following:
 
-Host: smtp.sendgrid.net
-Port: 587
-From: <your from address, e.g. noreply@foo.com>
-Login: apikey
-Password: <your SendGrid Api key>
-Secure connection: None
+1) Host: smtp.sendgrid.net
+2) Port: 587
+3) From: <your from address, e.g. noreply@foo.com>
+4) Login: apikey
+5) Password: <your SendGrid Api key>
+6) Secure connection: None
   
 SendGrid offers free trial and also gives you basically a free account through their Azure service (25,000 emails per month through Azure as of 09/12/18).
 
-## Setup Required Tools
+## TeamCity Windows Services Changes
+Go to the Services screen and change the TeamCity processes to run as the local admin user we created (e.g. teamcity). Make sure to update both services (TeamCity Build Agent and TeamCity server) to run as a local admin user. Again, this is required because the system account may not be able to run some of not all of the tools that we'll setup in the next steps.
 
+On my server, I have the processes run as 'teamcity897', which is a local admin user:
+![TeamCity Process Local User](https://raw.githubusercontent.com/glebpopoff/TeamCity-2018.1-Setup-Guide/master/teamcity-process-user.png)
+
+## Install Required Tools
+We'll need to setup the following tools on the server as a local admin user (teamcity):
+1) DotNet (.NET Core 2)
+2) NPM
+3) NPM packages
+4) Git
+
+Go ahead and log out of the server and login as the local admin user (e.g. teamcity). FYI - all further TeamCity related troubleshooting should be performed using this account.
+
+## Install .NET (Core)
+Login to the build server as the local admin user (teamcity) and download the .NET Core installer: https://www.microsoft.com/net/download
+
+I'm using .NET Core on my project but you may other requirements. So install what's necessary for your project.
+
+## Install NPM
+Login to the build server as the local admin user (teamcity) and download  Node.JS and NPM installer: https://www.npmjs.com/get-npm
+
+NPM is required to compile TypeScript as well as package (build) VueJS application.
+
+## Install NPM Packages
+Login to the build server as the local admin user (teamcity) and open the command prompt. Then lets install the following packages:
+
+1) TypeScript
+Type the following command in the command prompt:
+```
+npm install -g typescript
+```
+Make sure the compiler works after installing: run ```tsc``` More info: https://www.npmjs.com/package/typescript
+
+2) Vue CLI
+Type the following command in the command prompt:
+```
+npm install -g @vue/cli
+```
+More inf: https://www.npmjs.com/package/vue-cli
+
+
+## Setup Notification Rules (user)
+Login to TeamCity go to your account, select Notification Rules: http://<server url>/profile.html?item=userNotifications
+Click Add New Rule then on the right select the conditions (e.g. When Build Fails)
 
