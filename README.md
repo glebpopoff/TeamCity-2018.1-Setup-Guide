@@ -1,8 +1,8 @@
 # TeamCity 2018.1 Setup Guide
-The guide provides instructions on how to setup TeamCity 2018.1 server running on Windows 2016 server and configure build jobs for a VueJS application (with TypeScript) and a .NET Core 2 Web API.
+The guide provides instructions on how to setup TeamCity 2018.1 server running on Windows XXX server and configure build jobs for a VueJS application (with TypeScript) and a .NET Core 2 Web API.
 
 Requirements: 
-- Windows Server 2016 (lower versions will probably work as well). Suggested configuration: 2 vcpus, 4GB RAM
+- Windows Server 2016 (lower versions will probably work fine). Suggested configuration: 2 vcpus, 4GB RAM
 - TeamCity 2018.1
 - Full admin access to the server (including an ability to create new local-admin users)
 
@@ -53,8 +53,6 @@ Once the installer finishes, the browser should open the following page: http://
 
 If for some reason the installer fails or the page doesn't open, try re-installing teamcity from the beginning. If you can't get to the TeamCity First Start page (http://localhost/mnt), something went wrong.
 
-
-
 ## TeamCity Configuration
 Using the TeamCity Web First Start page (http://localhost/mnt) go through the steps until you need to setup Database connection. You will be presented with the following screen:
 
@@ -95,7 +93,7 @@ Finish the installer and create TeamCity admin user.
 
 Tip: if you forget your admin password, you can retrieve it using the following steps:
 
--  Go to your TeamCity installation log folder (log file path where TeamCity installed in C: drive: C:\TeamCity\logs)
+- Go to your TeamCity installation log folder (log file path where TeamCity installed in C: drive: C:\TeamCity\logs)
 - Open teamcity-server.log file
 - Search for key word: “Super user authentication” then copy the token . 
 - This token is reset every time Teamcity is restarted, so Look for the latest one from the Log.
@@ -104,7 +102,7 @@ Tip: if you forget your admin password, you can retrieve it using the following 
 
 Source: https://vnextcoder.wordpress.com/2015/09/15/teamcity-reset-admin-password/
 
-## Setup Email Notifier
+## Setup Email Settings
 Before we proceed with the project and build setup, lets go ahead and setup email settings for project build notifications. Skip this step if you're not interested in build notifications.
 
 Go to the Email Notifier page: http://localhost/admin/admin.html?item=email and enter the SMTP server information. If you're using SendGrid (which is awesome), your settings should be as following:
@@ -160,15 +158,17 @@ npm install -g @vue/cli
 ```
 More inf: https://www.npmjs.com/package/vue-cli
 
+## Install Git
+Download and install Git from here: https://git-scm.com/downloads Use default settings, make sure to check "Use Git from Windows Command Prompt" option (default selection).
+
 ## Restart the server
 Restart the server to make sure all proper $PATH environment variables have been set or try to restart just the TeamCity services and see whether that's enough.
 
 ## TeamCity Project Setup
-We're not ready to setup a project in TeamCity. The prerequisites here are:
+We're now ready to setup a project in TeamCity. The prerequisites here are:
 
 1) Publicly accessible Git repo 
 2) Git authentication means (either private SSH key or login credentials)
-
 
 Login to TeamCity web interface and click on Projects then click Create Project then pick from a repository URL. Enter your repository URL along with any required credentials . If it's an SSH repo, click on the "Manually" tab and proceed from there.
 
@@ -182,21 +182,21 @@ I'm going to assume you have the private key ready for your SSH repo. It's requi
 
 Then go ahead and click on VCS Roots from the menu then new VCS root select 'Git' from the Type of VCS menu then enter the URL of your SSH repo (e.g. ssh://git@bitbucket.XXX.com/projects/myproject.git)
 
-Enter VCS Root information (name), Fetch URL (URL of the repo). Then change the default branch if needed (e.g. from refs/heads/master to refs/heads/develop if you're working off Develop). The flow that we use on our projects is when code gets merged into Develop, we will deploy to the server. 
+Enter VCS Root information (name), Fetch URL (URL of the repo). Then change the default branch if needed (e.g. from refs/heads/master to refs/heads/develop if you're working off Develop). The build job will run whenever there's a merge into Master or Develop (whatever your settings are).
 
 Change the Authentication Method to 'Uploaded Key' then select the key you have uploaded earlier. Click on 'Test Connection' to make sure connection can be established. 
 
 ## .NET CLI Build Step
-Click on 'Create a new Build' then follow with Build setup. You should get to a screen that lets you select your build steps (after scanning your repo). Select '.NET CLI (dotnet)' as a build step and 'build <your solution name.sln' as parameter. We're telling the build job to use 'dotnet' to build your solution.
+Go ahead and click on 'Create a new Build' then follow the setup. You should get to a screen that lets you select your build steps (after scanning your repo). Select '.NET CLI (dotnet)' as a build step and 'build <your solution name.sln' as parameter. We're telling the build job to use 'dotnet' to build your solution.
 
 Next click on Triggers and add a new trigger: VCS Trigger (basically anytime someone merges the code into our branch the build will run)
 
-Click on Build then Run (to the right) then click on the build job and go into the Build log to see the progress of your build
+Click on Build then Run (to the right) then click on the build job and go into the Build log to see the progress of your build.
 
 ![Project Build Log](https://raw.githubusercontent.com/glebpopoff/TeamCity-2018.1-Setup-Guide/master/build-log.png)
 
 ## Vue App Build Steps
-So far, we have setup a single build step to build the .NET services project for our app; now we're going to add the remaining steps to build the VueJS application. In my case the app is written using TypeScript so I'll need to add a typescript compiler to the mix (tsc).
+So far, we have setup a single build step to build the .NET services project for our app; now we're going to add the remaining steps to build the VueJS application. In my case the app is written using TypeScript; so, I'll need to add typescript compiler to the mix (tsc). We're using multiple steps vs a single large step with lots of scripts so that it's easier to troubleshoot any issues with a specific step.
 
 ![Project Build Steps](https://raw.githubusercontent.com/glebpopoff/TeamCity-2018.1-Setup-Guide/master/build-log.png)
 
@@ -206,7 +206,7 @@ So far, we have setup a single build step to build the .NET services project for
 4) Publish .NET Api
 
 ### NPM Installation Step
-Click on Build Steps under your build then add a new one. Select 'Command Line' and enter the following to add a build script that will install NPM packages that are required by the app:  
+Go ahead and click on Build Steps under your build then add a new one. Select 'Command Line' and enter the following to add a build script that will install NPM packages that are required by the app:  
 
 - Step Name: 'Install NPM Packages'
 - Run: 'Custom script'
@@ -226,7 +226,7 @@ npm i -f
 ```
 
 ### TypeScript Compiler Step
-Click on Build Steps under your build then add a new one. Select 'Command Line' and enter the following to add a build script that will compile your typescrip files that are required by the app:  
+Go ahead and click on Build Steps under your build then add a new one. Select 'Command Line' and enter the following to add a build script that will compile your typescrip files that are required by the app:  
 
 - Step Name: 'Build TypeScript'
 - Run: 'Custom script'
@@ -246,7 +246,7 @@ tsc
 ```
 
 ### Vue Distribution Build Step
-Click on Build Steps under your build then add a new one. Select 'Command Line' and enter the following to add a build script that will build the app for distribution:
+Go ahead and click on Build Steps under your build then add a new one. Select 'Command Line' and enter the following to add a build script that will build the app for distribution:
 
 - Step Name: 'Build Vue App'
 - Run: 'Custom script'
@@ -266,7 +266,7 @@ npm run build
 ```
 
 ### Vue Distribution Build Step
-Click on Build Steps under your build then add a new one. Select 'Command Line' and enter the following to add a build script that will publish your .NET core app that you can then deploy to a server.
+Go ahead and click on Build Steps under your build then add a new one. Select 'Command Line' and enter the following to add a build script that will publish your .NET core app that you can then deploy to a server.
 
 - Step Name: 'Publish .NET API'
 - Run: 'Custom script'
