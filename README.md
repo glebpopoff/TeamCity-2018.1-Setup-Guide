@@ -112,3 +112,6 @@ Secure connection: None
   
 SendGrid offers free trial and also gives you basically a free account through their Azure service (25,000 emails per month through Azure as of 09/12/18).
 
+## Setup Required Tools
+
+
