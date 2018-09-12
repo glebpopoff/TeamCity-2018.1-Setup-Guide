@@ -186,6 +186,7 @@ Enter VCS Root information (name), Fetch URL (URL of the repo). Then change the 
 
 Change the Authentication Method to 'Uploaded Key' then select the key you have uploaded earlier. Click on 'Test Connection' to make sure connection can be established. 
 
+## .NET CLI Build Step
 Click on 'Create a new Build' then follow with Build setup. You should get to a screen that lets you select your build steps (after scanning your repo). Select '.NET CLI (dotnet)' as a build step and 'build <your solution name.sln' as parameter. We're telling the build job to use 'dotnet' to build your solution.
 
 Next click on Triggers and add a new trigger: VCS Trigger (basically anytime someone merges the code into our branch the build will run)
@@ -194,6 +195,100 @@ Click on Build then Run (to the right) then click on the build job and go into t
 
 ![Project Build Log](https://raw.githubusercontent.com/glebpopoff/TeamCity-2018.1-Setup-Guide/master/build-log.png)
 
+## Vue App Build Steps
+So far, we have setup a single build step to build the .NET services project for our app; now we're going to add the remaining steps to build the VueJS application. In my case the app is written using TypeScript so I'll need to add a typescript compiler to the mix (tsc).
+
+![Project Build Steps](https://raw.githubusercontent.com/glebpopoff/TeamCity-2018.1-Setup-Guide/master/build-log.png)
+
+1) Install NPM Packages
+2) Build TypeScript
+3) Build Vue App
+4) Publish .NET Api
+
+### NPM Installation Step
+Click on Build Steps under your build then add a new one. Select 'Command Line' and enter the following to add a build script that will install NPM packages that are required by the app:  
+
+- Step Name: 'Install NPM Packages'
+- Run: 'Custom script'
+- Custom script: 
+```
+cd <your UI or VueJS root folder>
+npm i -f
+```
+So if my top level directories in the repo look as following: 
+- ui (Vue App)
+- api (.NET services)
+
+Then the script should be as following:
+```
+cd ui
+npm i -f
+```
+
+### TypeScript Compiler Step
+Click on Build Steps under your build then add a new one. Select 'Command Line' and enter the following to add a build script that will compile your typescrip files that are required by the app:  
+
+- Step Name: 'Build TypeScript'
+- Run: 'Custom script'
+- Custom script: 
+```
+cd <your UI or VueJS root folder>
+tsc
+```
+So if my top level directories in the repo look as following: 
+- ui (Vue App)
+- api (.NET services)
+
+Then the script should be as following:
+```
+cd ui
+tsc
+```
+
+### Vue Distribution Build Step
+Click on Build Steps under your build then add a new one. Select 'Command Line' and enter the following to add a build script that will build the app for distribution:
+
+- Step Name: 'Build Vue App'
+- Run: 'Custom script'
+- Custom script: 
+```
+cd <your UI or VueJS root folder>
+npm run build
+```
+So if my top level directories in the repo look as following: 
+- ui (Vue App)
+- api (.NET services)
+
+Then the script should be as following:
+```
+cd ui
+npm run build
+```
+
+### Vue Distribution Build Step
+Click on Build Steps under your build then add a new one. Select 'Command Line' and enter the following to add a build script that will publish your .NET core app that you can then deploy to a server.
+
+- Step Name: 'Publish .NET API'
+- Run: 'Custom script'
+- Custom script: 
+```
+cd <your api root folder or where the solution file resides>
+dotnet publish <your file name>
+```
+So if my top level directories in the repo look as following: 
+```
+- ui (Vue App)
+- api (.NET services)
+ - MyAwesomeProject.sln
+```
+Then the script should be as following:
+```
+cd api
+dotnet publish MyAwesomeProject.sln
+```
+
+## App Deployment
+Coming soon!!!
 
 ## Setup Notification Rules (user)
 Login to TeamCity go to your account, select Notification Rules: http://<server url>/profile.html?item=userNotifications
