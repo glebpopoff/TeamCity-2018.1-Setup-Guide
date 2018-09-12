@@ -160,6 +160,8 @@ npm install -g @vue/cli
 ```
 More inf: https://www.npmjs.com/package/vue-cli
 
+## Restart the server
+Restart the server to make sure all proper $PATH environment variables have been set.
 
 ## Setup Notification Rules (user)
 Login to TeamCity go to your account, select Notification Rules: http://<server url>/profile.html?item=userNotifications
