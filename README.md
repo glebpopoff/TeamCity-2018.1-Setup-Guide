@@ -65,20 +65,50 @@ If the installer needs Microsoft Visual C++ 2015 Redistributable Package, downlo
 
 Choose the default options during the server setup, including the standard MySQL port (3306). Setup a strong MySQL root password. Setup a 'teamcity' user (DB admin). Make sure the server installs successfully.
 
+We now need to install MySQL client tools and create the database for TeamCity (not sure why installer cannot create the database on our behalf). Go ahead and run the MySQL installer then select "Client" and install the client tools (e.g. MySQL Workbench under Applications).
 
+Start MySQL Workbench and connect to the server as root then run the following SQL command:
+```
+create database teamcityci
+```
+This will create 'teamcityci' database on your local instance of MySQL server. 
 
+## TeamCity Configuration
 
+Go back to the TeamCity installer and enter 'teamcityci' as the name of your database along with teamcity user & password you created above.
 
+The TeamCity installer should now be in the "TeamCity is Starting" mode - this make take a little bit of time to setup.
 
+![TeamCity is Running](https://raw.githubusercontent.com/glebpopoff/TeamCity-2018.1-Setup-Guide/master/teamcity-is-running.png)
 
+Go ahead and accept the license agreement. FYI - as of 09/12/18 you're installing the software under the JetBrains TeamCity Professional license as such you're entitled to the following:
 
+![TeamCity Professional License](https://raw.githubusercontent.com/glebpopoff/TeamCity-2018.1-Setup-Guide/master/teamcity-professional-license.png)
 
+Finish the installer and create TeamCity admin user. 
 
-Run the installer.
+Tip: if you forget your admin password, you can retrieve it using the following steps:
 
+-  Go to your TeamCity installation log folder (log file path where TeamCity installed in C: drive: C:\TeamCity\logs)
+- Open teamcity-server.log file
+- Search for key word: “Super user authentication” then copy the token . 
+- This token is reset every time Teamcity is restarted, so Look for the latest one from the Log.
+- Go to Super User redirect page: http://servername:port/login.html?super=1
+- Enter the token. You should be redirected to the admin screen
 
+Source: https://vnextcoder.wordpress.com/2015/09/15/teamcity-reset-admin-password/
 
-Do not run the installer yet. We need to download and install MySQL database 
+## Setup Email Notifier
+Before we proceed with the project and build setup, lets go ahead and setup email settings for project build notifications. Skip this step if you're not interested in build notifications.
 
+Go to the Email Notifier page: http://localhost/admin/admin.html?item=email and enter the SMTP server information. If you're using SendGrid (which is awesome), your settings should be as following:
 
-Disable Windows Defender / scanner - 
+Host: smtp.sendgrid.net
+Port: 587
+From: <your from address, e.g. noreply@foo.com>
+Login: apikey
+Password: <your SendGrid Api key>
+Secure connection: None
+  
+SendGrid offers free trial and also gives you basically a free account through their Azure service (25,000 emails per month through Azure as of 09/12/18).
+
