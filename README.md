@@ -197,5 +197,5 @@ Click on Build then Run (to the right) then click on the build job and go into t
 
 ## Setup Notification Rules (user)
 Login to TeamCity go to your account, select Notification Rules: http://<server url>/profile.html?item=userNotifications
-Click Add New Rule then on the right select the conditions (e.g. When Build Fails)
+Click Add New Rule then select '<Root Project>' and required notification conditions (e.g. When Build Fails) 
 
