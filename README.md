@@ -161,7 +161,39 @@ npm install -g @vue/cli
 More inf: https://www.npmjs.com/package/vue-cli
 
 ## Restart the server
-Restart the server to make sure all proper $PATH environment variables have been set.
+Restart the server to make sure all proper $PATH environment variables have been set or try to restart just the TeamCity services and see whether that's enough.
+
+## TeamCity Project Setup
+We're not ready to setup a project in TeamCity. The prerequisites here are:
+
+1) Publicly accessible Git repo 
+2) Git authentication means (either private SSH key or login credentials)
+
+
+Login to TeamCity web interface and click on Projects then click Create Project then pick from a repository URL. Enter your repository URL along with any required credentials . If it's an SSH repo, click on the "Manually" tab and proceed from there.
+
+I'm assuming you're setting up an SSH-based repo. Go ahead and click on the "Manually" tab then enter the project name (e.g. MyProject - Dev) and click Create.
+
+Click on the project name to go into Project configuration then expand the General Settings tab.
+
+![TeamCity Project Settings](https://raw.githubusercontent.com/glebpopoff/TeamCity-2018.1-Setup-Guide/master/general-settings.png)
+
+I'm going to assume you have the private key ready for your SSH repo. It's required for the setup of SSH-based Git repo. Go ahead and click on the "SSH Keys" link and upload your key.
+
+Then go ahead and click on VCS Roots from the menu then new VCS root select 'Git' from the Type of VCS menu then enter the URL of your SSH repo (e.g. ssh://git@bitbucket.XXX.com/projects/myproject.git)
+
+Enter VCS Root information (name), Fetch URL (URL of the repo). Then change the default branch if needed (e.g. from refs/heads/master to refs/heads/develop if you're working off Develop). The flow that we use on our projects is when code gets merged into Develop, we will deploy to the server. 
+
+Change the Authentication Method to 'Uploaded Key' then select the key you have uploaded earlier. Click on 'Test Connection' to make sure connection can be established. 
+
+Click on 'Create a new Build' then follow with Build setup. You should get to a screen that lets you select your build steps (after scanning your repo). Select '.NET CLI (dotnet)' as a build step and 'build <your solution name.sln' as parameter. We're telling the build job to use 'dotnet' to build your solution.
+
+Next click on Triggers and add a new trigger: VCS Trigger (basically anytime someone merges the code into our branch the build will run)
+
+Click on Build then Run (to the right) then click on the build job and go into the Build log to see the progress of your build
+
+![Project Build Log](https://raw.githubusercontent.com/glebpopoff/TeamCity-2018.1-Setup-Guide/master/build-log.png)
+
 
 ## Setup Notification Rules (user)
 Login to TeamCity go to your account, select Notification Rules: http://<server url>/profile.html?item=userNotifications
