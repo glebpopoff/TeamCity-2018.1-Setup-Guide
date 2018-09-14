@@ -161,6 +161,14 @@ More inf: https://www.npmjs.com/package/vue-cli
 ## Install Git
 Download and install Git from here: https://git-scm.com/downloads Use default settings, make sure to check "Use Git from Windows Command Prompt" option (default selection).
 
+Make sure to install git as a local admin user (teamcity).
+
+Open command prompt and setup Git settings:
+```
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+```
+
 ## Restart the server
 Restart the server to make sure all proper $PATH environment variables have been set or try to restart just the TeamCity services and see whether that's enough.
 
@@ -288,7 +296,20 @@ dotnet publish MyAwesomeProject.sln
 ```
 
 ## App Deployment
-Coming soon!!!
+We're now ready to deploy the application to Azure or perhaps another remote server using Git. Assuming we're deploying the "ui" folder (where the Vue app resides) here's the script:
+
+```
+cd ui
+rmdir repoclone /s /q
+git clone https://<azure git user>:<azure git password>@<app service name>.scm.azurewebsites.net:443/<app service name>.git repoclone
+xcopy dist repoclone /s /e /y
+cd repoclone
+git add -A
+git commit -m 'teamcity'
+git push
+```
+
+If using Azure, you should be able to configure your Git settings in the Deployment Credentials and Deployment Center configuration panels.
 
 ## Setup Notification Rules (user)
 Login to TeamCity go to your account, select Notification Rules: http://<server url>/profile.html?item=userNotifications
