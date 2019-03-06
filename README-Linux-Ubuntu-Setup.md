@@ -1,9 +1,9 @@
 # TeamCity 2018.2.3 Linux (Ubuntu 18.04.2 LTS) Setup Guide
-The guide provides instructions on how to setup TeamCity 2018.2.3 server running on Ubuntu 18.04.2 LTS server and configure build jobs for a VueJS application (with TypeScript) and a .NET Core 2 Web API.
+The guide provides instructions on how to setup TeamCity 2018.2.3 server running on Ubuntu 18.04.2 LTS server and configure build jobs for a TypeScript VueJS application and a .NET Core 2 Web API.
 
 Requirements: 
 - Linux distro. Suggested configuration: 4 vcpus, 16GB RAM
-- 2018.2.3
+- TeamCity 2018.2.3
 - Root-level access to the box via SSH
 - No need for RDC/GUI access to the server - everything can be accomplished over SSH
 
@@ -23,8 +23,10 @@ If you do not have Java 1.8 installed, go ahead and install it:
 
 Update your apt-get references:
 ```sudo apt-get update```
+
 Then run:
 ```sudo apt-get install oracle-java8-installer```
+
 Make sure you have the right version now: ```java -version```
 
 ## Install MySQL Server & Client
@@ -33,7 +35,7 @@ If you don't have mysql server/client installed, go ahead and install it
 
 ## Change MySQL Root Login
 This is what worked for me (apparently, this is a little tricky with the latest version(s) of MySQL):
-````
+```
 sudo mysql
 
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
@@ -46,8 +48,11 @@ Run the following command:
 If the link above doesn't work, make sure you have the right link
 
 Untar and ungzip the file, then run *./runAll.sh start* from the bin folder:
-```cd TeamCity;
+```
+cd TeamCity;
+
 cd bin;
+
 ./runAll.sh start
 ```
 
