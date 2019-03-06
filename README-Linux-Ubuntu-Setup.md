@@ -58,7 +58,7 @@ cd bin;
 
 ## Install TeamCity 
 Once you run the server and agent processes, you should be able to now open the browser and navigate to this url to install TeamCity:
-http://<your server hostname>:8111/
+http://*your server hostname*:8111/
 
 If that doesn't work, check your firewall settings. If necessary, install XRDP (steps below) to try this on the server itself (you may need to install FireFox or another web browser).
 
