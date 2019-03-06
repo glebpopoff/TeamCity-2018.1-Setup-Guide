@@ -2,7 +2,7 @@
 The guide provides instructions on how to setup TeamCity 2018.1 server running on Windows XXX server and configure build jobs for a VueJS application (with TypeScript) and a .NET Core 2 Web API.
 
 Requirements: 
-- Windows Server 2016 (lower versions will probably work fine). Suggested configuration: 2 vcpus, 4GB RAM
+- Windows Server 2016 (lower versions will probably work fine). Suggested configuration: 4 vcpus, 16GB RAM _(node.js and java will take lots of RAM)_
 - TeamCity 2018.1
 - Full admin access to the server (including an ability to create new local-admin users)
 
