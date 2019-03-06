@@ -1,6 +1,10 @@
 # TeamCity 2018.2.3 Linux (Ubuntu 18.04.2 LTS) Setup Guide
 The guide provides instructions on how to setup TeamCity 2018.2.3 server running on Ubuntu 18.04.2 LTS server and configure build jobs for a TypeScript VueJS application and a .NET Core 2 Web API.
 
+Note:
+Windows Setup guide is here: https://github.com/glebpopoff/TeamCity-2018.1-Setup-Guide/blob/master/README.md
+Having done both multiple times, I have to say that the Linux installation is a little simpler than Windows. Teamcity and Node appear to run faster on Windows (as far as the build time goes)
+
 Requirements: 
 - Linux distro. Suggested configuration: 4 vcpus, 16GB RAM
 - TeamCity 2018.2.3
