@@ -1,4 +1,4 @@
-# TeamCity 2018.1 Setup Guide
+# TeamCity 2018.1 Windows Server Setup Guide
 The guide provides instructions on how to setup TeamCity 2018.1 server running on Windows XXX server and configure build jobs for a VueJS application (with TypeScript) and a .NET Core 2 Web API.
 
 Note:
