@@ -99,7 +99,7 @@ sudo dpkg-reconfigure tzdata
 date
 ```
 
-## RDC / XRDP Access
+## RDC / XRDP Access (optional)
 If you want to have XRDP access to your server, follow the steps below to get it installed and working. You can use a regular MS RDC client app (e.g. Mac or Windows) to connect to your server:
 ```
 sudo apt-get update
@@ -110,5 +110,6 @@ echo xfce4-session > .xsession
 ```
 Source: https://askubuntu.com/questions/464389/xrdp-gray-screen-tried-everything
 
-## Configure Jobs
-Refer to https://github.com/glebpopoff/TeamCity-2018.1-Setup-Guide/blob/master/README.md
+
+## TeamCity Project and Build Setup
+Refer to: https://github.com/glebpopoff/TeamCity-2018.1-Setup-Guide/blob/master/README.md
