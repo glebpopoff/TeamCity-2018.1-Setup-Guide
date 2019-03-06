@@ -109,3 +109,6 @@ sudo apt-get install xfce4
 echo xfce4-session > .xsession
 ```
 Source: https://askubuntu.com/questions/464389/xrdp-gray-screen-tried-everything
+
+## Configure Jobs
+Refer to https://github.com/glebpopoff/TeamCity-2018.1-Setup-Guide/blob/master/README.md
