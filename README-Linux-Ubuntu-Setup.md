@@ -114,6 +114,12 @@ echo xfce4-session > .xsession
 ```
 Source: https://askubuntu.com/questions/464389/xrdp-gray-screen-tried-everything
 
+## Kill Hanging Dotnet Build Processes (optional)
+For some reason the dotnet build processes remain in the memory after each build. If that's the case in your environment, run ```ps aux | grep dotnet``` to see if you have this issue, schedule a quick cron job to kill them.
+Example:
+```
+0 2 * * * pkill -f dotnet
+```
 
 ## TeamCity Project and Build Setup
 Refer to: https://github.com/glebpopoff/TeamCity-2018.1-Setup-Guide/blob/master/README.md
