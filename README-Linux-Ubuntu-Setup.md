@@ -31,6 +31,13 @@ Update your apt-get references:
 Then run:
 ```sudo apt-get install oracle-java8-installer```
 
+If you're seeing the package not found errors, run this:
+
+```
+sudo apt-get install python-software-properties
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+```
 Make sure you have the right version now: ```java -version```
 
 ## Install MySQL Server & Client
