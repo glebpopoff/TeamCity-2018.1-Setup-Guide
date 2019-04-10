@@ -100,7 +100,7 @@ Run these commands to install the required packages:
 ```
 sudo apt-get install nodejs
 sudo apt-get install npm
-npm install -g typescript
+sudo npm install -g typescript
 ```
 
 ## Update TimeZone / Date & Time
