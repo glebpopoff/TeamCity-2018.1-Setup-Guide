@@ -93,6 +93,22 @@ echo $DOTNET_HOME
 export  PATH="$PATH:$DOTNET_HOME"
 ```
 
+You may also want to add this permanently to the $PATH:
+```
+vi ~/.profile
+#then at the end of the file, put these lines
+export DOTNET_HOME="/usr/share/dotnet"
+export PATH="$PATH:$DOTNET_HOME"
+```
+Now restart the teamcity process for this take effect:
+```
+cd TeamCity/bin/
+./runAll.sh stop
+./runAll.sh start
+```
+
+If you don't restart TeamCity, you may see this error when trying to trigger a build: *teamcity DotNetCLI_Path exists* Another words, when the TeamCity process starts up it needs to be aware of the *DOTNET_HOME* variable
+
 Source: https://dev.to/carlos487/installing-dotnet-core-in-ubuntu-1804-7lp
 
 ## Install Node, NPM, and TypeScript
