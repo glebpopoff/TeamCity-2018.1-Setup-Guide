@@ -49,7 +49,7 @@ This is what worked for me (apparently, this is a little tricky with the latest 
 ```
 sudo mysql
 
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '<new root password>';
 ```
 Source: https://stackoverflow.com/questions/41645309/mysql-error-access-denied-for-user-rootlocalhost
 
